@@ -52,15 +52,85 @@ const winston = new Dog('Winston');
 
 // TODO: You'll have to create these two functions. Look in test/index.test.js to inspect the tests!
 class Factory {
-  createClass(className, classObj, classSetters) {
+  createClass(className, classObj, classSetters, classStaticObj) {
+    const NewClass = class {
+      constructor(...args) {
+        // TO BE CLEAR: The code below can be DRYed up since its reused everywhere. But to do so, makes it somewhat strange code to read (passing "this" contexts around). So I've opted for readability sake to not do so for you guys.
+        Object.entries(classObj).forEach(([key, val]) => {
+          this[key] = val;
 
+          if (typeof this[key] === 'function') {
+            this[key].bind(this);
+          }
+        });
+
+        if (classSetters && typeof classSetters === 'object') {
+          Object.entries(classSetters).forEach(([key, val]) => {
+            this[key] = val(args);
+
+            if (typeof this[key] === 'function') {
+              this[key].bind(this);
+            }
+          });
+        }
+      }
+    }
+
+    if (classStaticObj && typeof classStaticObj === 'object') {
+      Object.entries(classStaticObj).forEach(([key, val]) => {
+        NewClass[key] = val;
+      });
+    }
+
+    Object.defineProperty(
+      NewClass,
+      'name',
+      { value: className },
+    );
+
+    return NewClass;
   }
 
-  extendClass(ClassToExtend, className, classObj, classSetters) {
+  extendClass(ClassToExtend, className, classObj, classSetters, classStaticObj) {
+    const NewClass = class extends ClassToExtend {
+      constructor(...args) {
+        super(...args);
+        Object.entries(classObj).forEach(([key, val]) => {
+          this[key] = val;
 
+          if (typeof this[key] === 'function') {
+            this[key].bind(this);
+          }
+        });
+
+        if (classSetters && typeof classSetters === 'object') {
+          Object.entries(classSetters).forEach(([key, val]) => {
+            this[key] = val(args);
+
+            if (typeof this[key] === 'function') {
+              this[key].bind(this);
+            }
+          });
+        }
+      }
+    }
+
+    if (classStaticObj && typeof classStaticObj === 'object') {
+      Object.entries(classStaticObj).forEach(([key, val]) => {
+        NewClass[key] = val;
+      });
+    }
+
+    Object.defineProperty(
+      NewClass,
+      'name',
+      { value: className },
+    );
+
+    return NewClass;
   }
 }
 
 const theFactory = new Factory();
-
+console.log(theFactory)
 module.exports = theFactory;

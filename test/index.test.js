@@ -3,7 +3,7 @@ const theFactory = require('../src/index.js');
 // Change "xit" to "it" to enable a test.
 describe('Factory', () => {
   describe('createClass', () => {
-    xit('can take an object and create a class with it, assigning primitive values to keys', () => {
+    it('can take an object and create a class with it, assigning primitive values to keys', () => {
       const Mammal = theFactory.createClass(
         'Mammal',
         {
@@ -12,11 +12,11 @@ describe('Factory', () => {
       );
 
       const clementine = new Mammal();
-
+        console.log(clementine)
       expect(clementine.name).toEqual('clementine');
     });
 
-    xit('can take a second object and use the functions it provides to create values for keys', () => {
+    it('can take a second object and use the functions it provides to create values for keys', () => {
       const Mammal = theFactory.createClass(
         'Mammal',
         {
@@ -39,7 +39,7 @@ describe('Factory', () => {
       expect(clementine.age).toEqual(5);
     });
 
-    xit('can be assigned functions that properly receive their "this" context', () => {
+    it('can be assigned functions that properly receive their "this" context', () => {
       const originalLog = console.log;
 
       console.log = function(...args) {
@@ -105,7 +105,7 @@ describe('Factory', () => {
       );
     });
 
-    xit('can create a class by extending another class', () => {
+    it('can create a class by extending another class', () => {
       const originalLog = console.log;
 
       console.log = function(...args) {
@@ -142,7 +142,7 @@ describe('Factory', () => {
     });
   });
 
-  xdescribe('Bonus', () => {
+  describe('Bonus', () => {
     let Mammal, Dog, clementine, winston;
 
     beforeEach(() => {
